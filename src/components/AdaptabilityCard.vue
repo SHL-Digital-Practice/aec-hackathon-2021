@@ -7,7 +7,7 @@ const reusedElements = computed(() => {
 </script>
 
 <template>
-  <div class="bg-gray-200 flex-1 text-center items-center flex justify-center">
+  <div class="bg-gray-200 flex-1 text-center items-center flex justify-center z-50">
     <div class="p-6">
       <div>You have reused</div>
       <div class="text-5xl font-bold">{{ reusedElements }}</div>

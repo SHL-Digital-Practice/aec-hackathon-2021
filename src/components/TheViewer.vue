@@ -1,22 +1,28 @@
 <script setup>
-import { onMounted } from "@vue/runtime-core";
+import { onMounted, ref } from "vue";
 import { AmbientLight, AxesHelper, DirectionalLight, GridHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
+import { Color } from "three";
+
+const container = ref();
 
 onMounted(() => {
+  console.log(container.value);
   //Creates the Three.js scene
   const scene = new Scene();
+  scene.background = new Color(0x1e40af);
 
   //Object to store the size of the viewport
   const size = {
     width: window.innerWidth,
     height: window.innerHeight,
   };
+  console.log(window.innerWidth);
 
   //Creates the camera (point of view of the user)
   const aspect = size.width / size.height;
-  const camera = new PerspectiveCamera(75, aspect);
+  const camera = new PerspectiveCamera(40, aspect);
   camera.position.z = 15;
   camera.position.y = 13;
   camera.position.x = 8;
@@ -34,7 +40,7 @@ onMounted(() => {
   scene.add(directionalLight.target);
 
   //Sets up the renderer, fetching the canvas of the HTML
-  const threeCanvas = document.getElementById("three-canvas");
+  const threeCanvas = container.value;
   const renderer = new WebGLRenderer({
     canvas: threeCanvas,
     alpha: true,
@@ -44,7 +50,7 @@ onMounted(() => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   //Creates grids and axes in the scene
-  const grid = new GridHelper(50, 30);
+  const grid = new GridHelper(50, 30, 0x3b82f6, 0x3b82f6);
   scene.add(grid);
 
   const axes = new AxesHelper();
@@ -78,23 +84,14 @@ onMounted(() => {
   // Sets up the IFC loading
   const ifcLoader = new IFCLoader();
 
-  const input = document.getElementById("file-input");
-  input.addEventListener(
-    "change",
-    (changed) => {
-      const file = changed.target.files[0];
-      var ifcURL = URL.createObjectURL(file);
-      ifcLoader.load(ifcURL, (ifcModel) => scene.add(ifcModel.mesh));
-    },
-    false
-  );
+  const ifcURL = "/bloxhub.ifc";
+  ifcLoader.load(ifcURL, (ifcModel) => scene.add(ifcModel.mesh));
   ifcLoader.ifcManager.setWasmPath("/ifc/");
 });
 </script>
 
 <template>
-  <div class="bg-gray-200 h-80">
-    <input type="file" name="load" id="file-input" />
-    <canvas id="three-canvas"></canvas>
+  <div>
+    <canvas ref="container" class="absolute top-0 left-0 w-full h-screen z-10"></canvas>
   </div>
 </template>

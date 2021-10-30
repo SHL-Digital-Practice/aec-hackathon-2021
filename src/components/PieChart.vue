@@ -17,7 +17,7 @@ const pieChart = {
 </script>
 
 <template>
-  <div class="flex bg-gray-100 flex-1 items-center justify-center">
+  <div class="flex bg-gray-100 flex-1 items-center justify-center z-50">
     <div class="p-6">
       <vue3-chart-js v-bind="{ ...pieChart }" />
     </div>
