@@ -3,6 +3,7 @@ import ButtonRepo from "@/components/ButtonRepo.vue";
 import AdaptabilityCard from "../components/AdaptabilityCard.vue";
 import PieChart from "../components/PieChart.vue";
 import ProfitCard from "../components/ProfitCard.vue";
+import TheViewer from "@/components/TheViewer.vue";
 </script>
 
 <template>
@@ -20,7 +21,7 @@ import ProfitCard from "../components/ProfitCard.vue";
         </div>
         <ButtonRepo />
       </div> -->
-      <div class="bg-green-200">Viewer</div>
+      <TheViewer />
       <div class="flex space-x-8">
         <AdaptabilityCard />
         <PieChart />
