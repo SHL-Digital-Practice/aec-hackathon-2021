@@ -9,8 +9,8 @@ import TheViewer from "@/components/TheViewer.vue";
 <template>
   <div>
     <!-- <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between"> -->
-    <div class="z-50 max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:items-center lg:justify-between space-y-8">
-      <div class="absolute w-full bot-0 left-0 flex space-x-8 z-50 h-40 mt-96">
+    <div class="z-40 max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:items-center lg:justify-between space-y-8">
+      <div class="absolute bottom-20 w-full left-0 flex space-x-8 z-40 px-40">
         <AdaptabilityCard />
         <PieChart />
         <ProfitCard />

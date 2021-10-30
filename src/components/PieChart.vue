@@ -17,9 +17,11 @@ const pieChart = {
 </script>
 
 <template>
-  <div class="flex bg-gray-100 flex-1 items-center justify-center z-50">
+  <div class="bg-gray-200 flex-1 text-center flex items-center justify-center z-50">
     <div class="p-6">
-      <vue3-chart-js v-bind="{ ...pieChart }" />
+      <div>You are saving</div>
+      <div class="text-4xl font-bold">4,2 tons</div>
+      <div>of CO2 🚬</div>
     </div>
   </div>
 </template>
