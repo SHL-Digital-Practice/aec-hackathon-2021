@@ -1,11 +1,14 @@
 <script setup>
 import ButtonRepo from "@/components/ButtonRepo.vue";
+import AdaptabilityCard from "../components/AdaptabilityCard.vue";
+import PieChart from "../components/PieChart.vue";
+import ProfitCard from "../components/ProfitCard.vue";
 </script>
 
 <template>
   <div>
     <!-- <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between"> -->
-    <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:items-center lg:justify-between">
+    <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:items-center lg:justify-between space-y-8">
       <!-- <h2 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 sm:text-4xl sm:leading-10">
         Ready to dive in?
         <br />
@@ -18,7 +21,11 @@ import ButtonRepo from "@/components/ButtonRepo.vue";
         <ButtonRepo />
       </div> -->
       <div class="bg-green-200">Viewer</div>
-      <div class="bg-yellow-200">Charts</div>
+      <div class="flex space-x-8">
+        <AdaptabilityCard />
+        <PieChart />
+        <ProfitCard />
+      </div>
     </div>
   </div>
 </template>
