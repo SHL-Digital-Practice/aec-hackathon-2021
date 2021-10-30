@@ -7,7 +7,7 @@ const savings = computed(() => {
 </script>
 
 <template>
-  <div class="bg-indigo-200 flex-1 text-center">
+  <div class="bg-gray-200 flex-1 text-center flex items-center justify-center">
     <div class="p-6">
       <div>You are saving</div>
       <div class="text-4xl font-bold">{{ savings }}</div>
