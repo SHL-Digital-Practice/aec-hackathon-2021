@@ -84,6 +84,8 @@ onMounted(() => {
 
   const ifcURL = "/bloxhub.ifc";
   ifcLoader.load(ifcURL, (ifcModel) => {
+    console.log(ifcModel);
+
     scene.add(ifcModel.mesh);
     model = ifcModel;
     adjustMaterials();
