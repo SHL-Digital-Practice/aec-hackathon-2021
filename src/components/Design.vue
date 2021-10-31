@@ -3,5 +3,5 @@ import TheViewer from "@/components/TheViewer.vue";
 </script>
 
 <template>
-  <TheViewer ifcURL="/bloxhub.ifc" />
+  <TheViewer ifcURL="/bloxhub2.ifc" />
 </template>
