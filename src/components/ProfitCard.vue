@@ -2,7 +2,7 @@
 import { computed } from "vue";
 
 const savings = computed(() => {
-  return "369.000 kr.";
+  return "379.800 kr.";
 });
 </script>
 
