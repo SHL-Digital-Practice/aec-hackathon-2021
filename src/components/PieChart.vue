@@ -21,7 +21,7 @@ const pieChart = {
     <div class="p-6">
       <div>You are saving</div>
       <div class="text-4xl font-bold">4,2 tons</div>
-      <div>of CO2 🚬</div>
+      <div>of CO2 🏭</div>
     </div>
   </div>
 </template>

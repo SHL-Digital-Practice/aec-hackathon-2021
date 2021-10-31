@@ -2,7 +2,7 @@
 import { computed } from "vue";
 
 const reusedElements = computed(() => {
-  return 369;
+  return 206;
 });
 </script>
 
@@ -11,7 +11,7 @@ const reusedElements = computed(() => {
     <div class="p-6">
       <div>You have reused</div>
       <div class="text-5xl font-bold">{{ reusedElements }}</div>
-      <div>elements 🤯</div>
+      <div>elements 😀</div>
     </div>
   </div>
 </template>

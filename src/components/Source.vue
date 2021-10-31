@@ -4,6 +4,6 @@ import TheViewer from "@/components/TheViewer.vue";
 
 <template>
   <div class="absolute top-0 left-0 h-full w-full bg-green-400">
-    <TheViewer ifcURL="/tvbyen.ifc" />
+    <TheViewer ifcURL="/tvbyen.ifc" :showReused="false" />
   </div>
 </template>

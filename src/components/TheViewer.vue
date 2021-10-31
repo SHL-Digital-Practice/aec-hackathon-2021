@@ -10,6 +10,7 @@ import { IFCWINDOW, IFCCOLUMN } from "web-ifc";
 
 const props = defineProps({
   ifcURL: String,
+  showReused: Boolean,
 });
 
 const container = ref();
@@ -105,7 +106,9 @@ onMounted(() => {
     // const columns = manager.getAllItemsOfType(0, IFCWINDOW, true)
 
     manager.getAllItemsOfType(0, IFCCOLUMN, true).then(function (result) {
-      return getColumn(result);
+      if (props.showReused) {
+        return getColumn(result);
+      }
     });
 
     scene.add(ifcModel.mesh);
