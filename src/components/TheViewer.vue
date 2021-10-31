@@ -5,19 +5,21 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
 import { Color, Raycaster, Vector2, Vector3 } from "three";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
+// import { IFCWALLSTANDARDCASE as W } from "web-ifc";
+import { IFCWINDOW, IFCCOLUMN } from "web-ifc";
 
 const props = defineProps({
   ifcURL: String,
 });
 
 const container = ref();
-let model, camera, controls, box;
+let model, camera, controls, box, id, ifcLoader, manager, scene;
 
 onMounted(() => {
   //Creates the Three.js scene
   const threeCanvas = container.value;
   console.log(threeCanvas);
-  const scene = new Scene();
+  scene = new Scene();
   // scene.background = new Color(0x1e40af);
 
   //Object to store the size of the viewport
@@ -89,20 +91,38 @@ onMounted(() => {
 
   // Sets up the IFC loading
   const ifcModels = [];
-  const ifcLoader = new IFCLoader();
+  ifcLoader = new IFCLoader();
   ifcLoader.ifcManager.setupThreeMeshBVH(computeBoundsTree, disposeBoundsTree, acceleratedRaycast);
 
   //const ifcURL = "/bloxhub.ifc";
   ifcLoader.load(props.ifcURL, (ifcModel) => {
+    id = ifcModel.mesh.modelID;
+
+    manager = ifcLoader.ifcManager;
+
     console.log(ifcModel);
+    // const walls = manager.getAllItemsOfType(0, W, false);
+    // const columns = manager.getAllItemsOfType(0, IFCWINDOW, true)
+
+    manager.getAllItemsOfType(0, IFCCOLUMN, true).then(function (result) {
+      return getColumn(result);
+    });
 
     scene.add(ifcModel.mesh);
     model = ifcModel;
+
     adjustMaterials();
     updateCamera();
   });
   ifcLoader.ifcManager.setWasmPath("/ifc/");
 });
+
+const getColumn = (result) => {
+  // console.log(result);
+  manager.hideAllItems(0);
+  const ids = result.map((o) => o.expressID);
+  manager.showItems(0, ids);
+};
 
 const adjustMaterials = () => {
   model.material.forEach((m) => {
