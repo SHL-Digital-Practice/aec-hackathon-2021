@@ -10,8 +10,8 @@ const reusedElements = computed(() => {
   <div class="bg-white hover:text-blue-700 flex-1 text-center items-center flex justify-center z-50">
     <div class="p-6">
       <div>You have reused</div>
-      <div class="text-5xl font-bold">{{ reusedElements }}</div>
-      <div>elements 😀</div>
+      <div class="text-5xl font-bold">10.2%</div>
+      <div>of elements 😀</div>
     </div>
   </div>
 </template>
