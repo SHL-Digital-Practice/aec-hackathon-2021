@@ -3,22 +3,25 @@ import { onMounted, ref } from "vue";
 import { AmbientLight, AxesHelper, DirectionalLight, GridHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-import { Color } from "three";
+import { Color, Raycaster, Vector2 } from "three";
+import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
+
+const props = defineProps({
+  ifcURL: String,
+});
 
 const container = ref();
 
 onMounted(() => {
-  console.log(container.value);
   //Creates the Three.js scene
   const scene = new Scene();
-  scene.background = new Color(0x1e40af);
+  // scene.background = new Color(0x1e40af);
 
   //Object to store the size of the viewport
   const size = {
     width: window.innerWidth,
     height: window.innerHeight,
   };
-  console.log(window.innerWidth);
 
   //Creates the camera (point of view of the user)
   const aspect = size.width / size.height;
@@ -82,16 +85,20 @@ onMounted(() => {
   });
 
   // Sets up the IFC loading
+  const ifcModels = [];
   const ifcLoader = new IFCLoader();
+  ifcLoader.ifcManager.setupThreeMeshBVH(computeBoundsTree, disposeBoundsTree, acceleratedRaycast);
 
-  const ifcURL = "/bloxhub.ifc";
-  ifcLoader.load(ifcURL, (ifcModel) => scene.add(ifcModel.mesh));
+  // const ifcURL = "/bloxhub.ifc";
+  ifcLoader.load(props.ifcURL, (ifcModel) => scene.add(ifcModel.mesh));
   ifcLoader.ifcManager.setWasmPath("/ifc/");
 });
+
+console.log(props.ifcURL);
 </script>
 
 <template>
-  <div>
-    <canvas ref="container" class="absolute top-0 left-0 w-full h-screen z-10"></canvas>
+  <div class="static">
+    <canvas ref="container" class="absolute bottom-0 left-0"></canvas>
   </div>
 </template>

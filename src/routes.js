@@ -4,7 +4,11 @@ import NotFound from "./views/NotFound.vue";
 
 /** @type {import('vue-router').RouterOptions['routes']} */
 export const routes = [
-  { path: "/", component: Home, meta: { title: "ReAdapt" } },
+  {
+    path: "/",
+    component: Home,
+    meta: { title: "reADAPT" },
+  },
   {
     path: "/about",
     meta: { title: "About" },
