@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { AmbientLight, AxesHelper, DirectionalLight, GridHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { AmbientLight, AxesHelper, Box3, DirectionalLight, GridHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
 import { Color, Raycaster, Vector2 } from "three";
@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const container = ref();
-
+let model, camera, controls, box;
 onMounted(() => {
   //Creates the Three.js scene
   const scene = new Scene();
@@ -25,7 +25,7 @@ onMounted(() => {
 
   //Creates the camera (point of view of the user)
   const aspect = size.width / size.height;
-  const camera = new PerspectiveCamera(40, aspect);
+  camera = new PerspectiveCamera(40, aspect);
   camera.position.z = 15;
   camera.position.y = 13;
   camera.position.x = 8;
@@ -62,7 +62,7 @@ onMounted(() => {
   scene.add(axes);
 
   //Creates the orbit controls (to navigate the scene)
-  const controls = new OrbitControls(camera, threeCanvas);
+  controls = new OrbitControls(camera, threeCanvas);
   controls.enableDamping = true;
   controls.target.set(-2, 0, 0);
 
@@ -89,12 +89,49 @@ onMounted(() => {
   const ifcLoader = new IFCLoader();
   ifcLoader.ifcManager.setupThreeMeshBVH(computeBoundsTree, disposeBoundsTree, acceleratedRaycast);
 
-  // const ifcURL = "/bloxhub.ifc";
-  ifcLoader.load(props.ifcURL, (ifcModel) => scene.add(ifcModel.mesh));
+  //const ifcURL = "/bloxhub.ifc";
+  ifcLoader.load(props.ifcURL, (ifcModel) => {
+    console.log(ifcModel);
+
+    scene.add(ifcModel.mesh);
+    model = ifcModel;
+    adjustMaterials();
+
+    updateCamera();
+  });
   ifcLoader.ifcManager.setWasmPath("/ifc/");
 });
 
-console.log(props.ifcURL);
+const adjustMaterials = () => {
+  model.material.forEach((m) => {
+    m.color.set(new Color(0xffffff));
+  });
+};
+
+function updateCamera(fitOffset = 0.8) {
+  box = new Box3();
+  box.expandByObject(model.mesh);
+
+  // box = model.mesh.geometry.computeBoundingBox();
+  let size = box.getSize(new Vector3());
+  let center = box.getCenter(new Vector3());
+
+  const maxSize = Math.max(size.x, size.y, size.z);
+  const fitHeightDistance = maxSize / (2 * Math.atan((Math.PI * camera.fov) / 360));
+  const fitWidthDistance = fitHeightDistance / camera.aspect;
+  const distance = fitOffset * Math.max(fitHeightDistance, fitWidthDistance);
+  const direction = controls.target.clone().sub(camera.position).normalize().multiplyScalar(distance);
+
+  controls.maxDistance = distance * 10;
+  controls.target.copy(center);
+
+  camera.near = distance / 100;
+  camera.far = distance * 100;
+  camera.updateProjectionMatrix();
+  camera.position.copy(controls.target).sub(direction);
+
+  controls.update();
+}
 </script>
 
 <template>
