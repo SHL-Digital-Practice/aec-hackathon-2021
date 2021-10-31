@@ -26,7 +26,7 @@ const setView = (viewname) => {
   <div>
     <!-- <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between"> -->
     <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:items-center lg:justify-between space-y-8">
-      <div class="absolute top-30 left-auto w-full flex justify-center space-x-80 z-40">
+      <div class="absolute top-30 flex justify-center space-x-80 z-40">
         <button class="p-3 hover:bg-white" @click="setView('design')">
           <p class="text-2xl font-semibold">Design</p>
         </button>
