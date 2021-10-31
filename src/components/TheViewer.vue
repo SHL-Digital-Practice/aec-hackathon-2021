@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { AmbientLight, AxesHelper, Box3, DirectionalLight, GridHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-import { Color, Raycaster, Vector2 } from "three";
+import { Color, Raycaster, Vector2, Vector3 } from "three";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
 
 const props = defineProps({
@@ -12,6 +12,7 @@ const props = defineProps({
 
 const container = ref();
 let model, camera, controls, box;
+
 onMounted(() => {
   //Creates the Three.js scene
   const scene = new Scene();
@@ -96,7 +97,6 @@ onMounted(() => {
     scene.add(ifcModel.mesh);
     model = ifcModel;
     adjustMaterials();
-
     updateCamera();
   });
   ifcLoader.ifcManager.setWasmPath("/ifc/");
