@@ -3,10 +3,9 @@ import { onMounted, ref } from "vue";
 import { AmbientLight, AxesHelper, Box3, DirectionalLight, GridHelper, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-import { Color, Raycaster, Vector2, Vector3 } from "three";
+import { Color, Vector3 } from "three";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
-// import { IFCWALLSTANDARDCASE as W } from "web-ifc";
-import { IFCWINDOW, IFCCOLUMN } from "web-ifc";
+import { IFCCOLUMN } from "web-ifc";
 
 const props = defineProps({
   ifcURL: String,
@@ -17,14 +16,10 @@ const container = ref();
 let model, camera, controls, box, id, ifcLoader, manager, scene;
 
 onMounted(() => {
-  //Creates the Three.js scene
   const threeCanvas = container.value;
-  console.log(threeCanvas);
   scene = new Scene();
-  // scene.background = new Color(0x1e40af);
 
   //Object to store the size of the viewport
-
   const size = {
     width: threeCanvas.offsetWidth,
     height: threeCanvas.offsetHeight,
@@ -59,9 +54,6 @@ onMounted(() => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   //Creates grids and axes in the scene
-  const grid = new GridHelper(50, 30, 0x3b82f6, 0x3b82f6);
-  // scene.add(grid);
-
   const axes = new AxesHelper();
   axes.material.depthTest = false;
   axes.renderOrder = 1;
@@ -95,16 +87,11 @@ onMounted(() => {
   ifcLoader = new IFCLoader();
   ifcLoader.ifcManager.setupThreeMeshBVH(computeBoundsTree, disposeBoundsTree, acceleratedRaycast);
 
-  //const ifcURL = "/bloxhub.ifc";
+  //IFC Model loader
   ifcLoader.load(props.ifcURL, (ifcModel) => {
     id = ifcModel.mesh.modelID;
 
     manager = ifcLoader.ifcManager;
-
-    console.log(ifcModel);
-    // const walls = manager.getAllItemsOfType(0, W, false);
-    // const columns = manager.getAllItemsOfType(0, IFCWINDOW, true)
-
     manager.getAllItemsOfType(0, IFCCOLUMN, true).then(function (result) {
       if (props.showReused) {
         return getColumn(result);
@@ -120,8 +107,8 @@ onMounted(() => {
   ifcLoader.ifcManager.setWasmPath("/ifc/");
 });
 
+//Some IFC.js magic
 const getColumn = (result) => {
-  // console.log(result);
   manager.hideAllItems(0);
   const ids = result.map((o) => o.expressID);
   manager.showItems(0, ids);
@@ -133,11 +120,11 @@ const adjustMaterials = () => {
   });
 };
 
+//Focus camera on the IFC model
 function updateCamera(fitOffset = 0.8) {
   box = new Box3();
   box.expandByObject(model.mesh);
 
-  // box = model.mesh.geometry.computeBoundingBox();
   let size = box.getSize(new Vector3());
   let center = box.getCenter(new Vector3());
 
