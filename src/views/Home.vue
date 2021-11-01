@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, shallowRef } from "vue";
 import ButtonRepo from "@/components/ButtonRepo.vue";
 import AdaptabilityCard from "../components/AdaptabilityCard.vue";
 import PieChart from "../components/PieChart.vue";
@@ -15,7 +15,7 @@ const viewerMap = {
   match: Match,
 };
 
-const currentView = ref(Design);
+const currentView = shallowRef(Design);
 
 const setView = (viewname) => {
   currentView.value = viewerMap[viewname];
@@ -25,16 +25,16 @@ const setView = (viewname) => {
 <template>
   <div>
     <!-- <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between"> -->
-    <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:py-16 lg:px-8 lg:items-center lg:justify-between space-y-8">
-      <div class="absolute top-30 flex justify-center space-x-80 z-40">
-        <button class="p-3 hover:bg-white" @click="setView('design')">
+    <div class="flex bg-indigo-700 h-screen justify-center">
+      <div class="absolute top-40 flex space-x-20 z-40">
+        <button class="p-3 hover:bg-white hover:text-black text-white" @click="setView('design')">
           <p class="text-2xl font-semibold">Design</p>
         </button>
-        <button class="p-3 hover:bg-white" @click="setView('source')">
-          <p class="text-2xl font-semibold">Source</p>
+        <button class="p-3 hover:bg-white hover:text-black text-white" @click="setView('source')">
+          <p class="text-2xl font-semibold">Reuse</p>
         </button>
 
-        <button class="p-3 hover:bg-white" @click="setView('match')">
+        <button class="p-3 hover:bg-white hover:text-black text-white" @click="setView('match')">
           <p class="text-2xl font-semibold">Match</p>
         </button>
       </div>
@@ -43,9 +43,9 @@ const setView = (viewname) => {
         <PieChart />
         <ProfitCard />
       </div>
-      <!-- <keep-alive> -->
-      <component :is="currentView" />
-      <!-- </keep-alive> -->
+      <keep-alive>
+        <component class="h-screen" :is="currentView" />
+      </keep-alive>
     </div>
   </div>
 </template>

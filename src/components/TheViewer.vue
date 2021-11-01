@@ -5,23 +5,29 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
 import { Color, Raycaster, Vector2, Vector3 } from "three";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
+// import { IFCWALLSTANDARDCASE as W } from "web-ifc";
+import { IFCWINDOW, IFCCOLUMN } from "web-ifc";
 
 const props = defineProps({
   ifcURL: String,
+  showReused: Boolean,
 });
 
 const container = ref();
-let model, camera, controls, box;
+let model, camera, controls, box, id, ifcLoader, manager, scene;
 
 onMounted(() => {
   //Creates the Three.js scene
-  const scene = new Scene();
+  const threeCanvas = container.value;
+  console.log(threeCanvas);
+  scene = new Scene();
   // scene.background = new Color(0x1e40af);
 
   //Object to store the size of the viewport
+
   const size = {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: threeCanvas.offsetWidth,
+    height: threeCanvas.offsetHeight,
   };
 
   //Creates the camera (point of view of the user)
@@ -44,7 +50,6 @@ onMounted(() => {
   scene.add(directionalLight.target);
 
   //Sets up the renderer, fetching the canvas of the HTML
-  const threeCanvas = container.value;
   const renderer = new WebGLRenderer({
     canvas: threeCanvas,
     alpha: true,
@@ -55,7 +60,7 @@ onMounted(() => {
 
   //Creates grids and axes in the scene
   const grid = new GridHelper(50, 30, 0x3b82f6, 0x3b82f6);
-  scene.add(grid);
+  // scene.add(grid);
 
   const axes = new AxesHelper();
   axes.material.depthTest = false;
@@ -78,8 +83,8 @@ onMounted(() => {
 
   //Adjust the viewport to the size of the browser
   window.addEventListener("resize", () => {
-    size.width = window.innerWidth;
-    size.height = window.innerHeight;
+    size.width = threeCanvas.innerWidth;
+    size.height = threeCanvas.innerHeight;
     camera.aspect = size.width / size.height;
     camera.updateProjectionMatrix();
     renderer.setSize(size.width, size.height);
@@ -87,20 +92,40 @@ onMounted(() => {
 
   // Sets up the IFC loading
   const ifcModels = [];
-  const ifcLoader = new IFCLoader();
+  ifcLoader = new IFCLoader();
   ifcLoader.ifcManager.setupThreeMeshBVH(computeBoundsTree, disposeBoundsTree, acceleratedRaycast);
 
   //const ifcURL = "/bloxhub.ifc";
   ifcLoader.load(props.ifcURL, (ifcModel) => {
+    id = ifcModel.mesh.modelID;
+
+    manager = ifcLoader.ifcManager;
+
     console.log(ifcModel);
+    // const walls = manager.getAllItemsOfType(0, W, false);
+    // const columns = manager.getAllItemsOfType(0, IFCWINDOW, true)
+
+    manager.getAllItemsOfType(0, IFCCOLUMN, true).then(function (result) {
+      if (props.showReused) {
+        return getColumn(result);
+      }
+    });
 
     scene.add(ifcModel.mesh);
     model = ifcModel;
+
     adjustMaterials();
     updateCamera();
   });
   ifcLoader.ifcManager.setWasmPath("/ifc/");
 });
+
+const getColumn = (result) => {
+  // console.log(result);
+  manager.hideAllItems(0);
+  const ids = result.map((o) => o.expressID);
+  manager.showItems(0, ids);
+};
 
 const adjustMaterials = () => {
   model.material.forEach((m) => {
@@ -135,7 +160,5 @@ function updateCamera(fitOffset = 0.8) {
 </script>
 
 <template>
-  <div class="static">
-    <canvas ref="container" class="absolute bottom-0 left-0"></canvas>
-  </div>
+  <canvas ref="container" class="absolute w-full h-full"></canvas>
 </template>
