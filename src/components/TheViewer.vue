@@ -105,6 +105,10 @@ onMounted(() => {
     // const walls = manager.getAllItemsOfType(0, W, false);
     // const columns = manager.getAllItemsOfType(0, IFCWINDOW, true)
 
+    manager.getItemProperties(id, 1066534, true).then((props) => {
+      console.log(props);
+    });
+
     manager.getAllItemsOfType(0, IFCCOLUMN, true).then(function (result) {
       if (props.showReused) {
         return getColumn(result);
